@@ -4,17 +4,14 @@
 var soap = require('soap');
 var http = require('http');
 
-var service = {
+var chargeService = {
     ChargeImplService: {
         ChargeImpl: {
             charge : function(args) {
-                // var n = 1*args.a + 1*args.b;
-                // return { sumres : n };
-
                 var request = require('request');
                 request.post({
                     headers: {'content-type' : 'application/json'},
-                    url: 'http://167.205.35.221/',
+                    url: 'http://167.205.35.221:8080/engine-rest/message',
                     body: {"message-type" : "start-payment",
                     "processVariables" : {
                         "customer_id" : {"value" : args.arg0, "type" : "Integer"},
@@ -33,11 +30,34 @@ var service = {
     }
 };
 
-var xml = require('fs').readFileSync('charge.xml', 'utf8');
+var payService = {
+    PayImplService: {
+        PayImpl: {
+            pay : function(args) {
+                var request = require('request');
+                request.post({
+                    headers: {'content-type' : 'application/json'},
+                    url: 'http://167.205.35.221:8080/engine-rest/message',
+                    body: {"message-type" : "pay-trigger",
+                    "processVariables" : {
+                        "transaction_id" : {"value" : args.arg0, "type": "String"}
+                    }}
+                }, function(error, response, body){
+                    console.log(body);
+                });
+
+            }
+        }
+    }
+};
+
+var chargeXml = require('fs').readFileSync('charge.xml', 'utf8');
+var payXml = require('fs').readFileSync('pay.xml', 'utf8');
 
 var server = http.createServer(function(request,response) {
     response.end("404: Not Found: "+request.url);
 });
 
 server.listen(8001);
-soap.listen(server, '/midone', service, xml);
+soap.listen(server, '/soap/charge', chargeService, chargeXml);
+soap.listen(server, '/soap/pay', payService, payXml);
