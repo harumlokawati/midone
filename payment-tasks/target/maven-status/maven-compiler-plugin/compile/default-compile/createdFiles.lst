@@ -1,0 +1,4 @@
+com/payme/paymentgateway/connection/HTTPConnection.class
+com/payme/paymentgateway/mailing/GoogleMail$1.class
+com/payme/paymentgateway/businesslogic/PaymentBusinessLogic.class
+com/payme/paymentgateway/mailing/GoogleMail.class

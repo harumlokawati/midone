@@ -1,0 +1,57 @@
+<!DOCTYPE HTML>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml"
+  xmlns:ui="http://java.sun.com/jsf/facelets"
+  xmlns:h="http://java.sun.com/jsf/html"
+  xmlns:f="http://java.sun.com/jsf/core">
+
+<f:view>
+  <f:metadata>
+    <!-- Start a new process instance. The Process Definition Key is read internally from
+         request parameters and cached in the CDI conversation scope.
+    -->
+    <f:event type="preRenderView" listener="#{camundaTaskForm.startProcessInstanceByKeyForm()}" />
+  </f:metadata>
+  <h:head>
+    <title>Payment Form</title>
+  </h:head>
+  <h:body>
+    <h1>Payment Data Form</h1>
+    <h:form id="submitForm">
+      <h:panelGrid columns="2">
+      
+		  <label for="customer">Customer</label>
+          <!-- create process variables using the processVariables map. -->
+          <h:inputText id="customer_id" value="#{processVariables['customer_id']}" required="true" />
+          
+          <label for="bill_name">Bill Name</label>
+          <!-- create process variables using the processVariables map. -->
+          <h:inputText id="bill_name" value="#{processVariables['bill_name']}" required="false" />
+          
+          <label for="payment_method">Method</label>
+          <h:selectOneMenu id="payment_method" value="#{processVariables['payment_method']}">
+              <f:selectItem itemValue="transfer" itemLabel="Transfer"/>
+              <f:selectItem itemValue="CC" itemLabel="Credit Card"/>
+              <f:selectItem itemValue="debit" itemLabel="Debit Card"/>
+              <f:selectItem itemValue="merchant" itemLabel="Merchant"/>
+          </h:selectOneMenu>
+          
+          <label for="payment_provider">Provider</label>
+          <h:inputText id="payment_provider" value="#{processVariables['payment_provider']}" required="true" />
+
+          <label for="amount">Amount</label>
+          <!-- create process variables using the processVariables map. -->
+          <h:inputText id="amount" value="#{processVariables['amount']}" required="true" />
+          
+      </h:panelGrid>
+
+      <!-- The button starts a new process instance. This ends the conversation and redirects us to the tasklist.
+
+           NOTE: Syntax is different when working on user task forms, see file "approveLoanRequest.xhtml".
+      -->
+      <h:commandButton id="submit_button" value="Pay" action="#{camundaTaskForm.completeProcessInstanceForm()}" />
+
+      <h:messages style="color:red;margin:8px;" />
+    </h:form>
+  </h:body>
+</f:view>
+</html>
